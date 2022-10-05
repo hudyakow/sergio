@@ -1,0 +1,1465 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>SERGEY</title>
+		<link href = "style.css" rel = "stylesheet">
+		<script src="https://kit.fontawesome.com/3219cc2f1b.js" crossorigin="anonymous"></script>
+		<script src = "script.js"></script>
+		<link rel="icon" href="image/icon2.png" type="image/x-icon">
+		<script src="jquery.js"></script>
+		<script src="./cloud.js"></script>
+		<script
+           src="https://code.jquery.com/jquery-3.6.0.js"
+           integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk="
+            crossorigin="anonymous">
+		</script>
+		<script type="text/javascript" src="https://res.cloudinary.com/veseylab/raw/upload/v1636192990/magicmouse/magic_mouse-1.2.1.cdn.min.js"></script>
+		<!---<meta charset="UTF-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">--->
+	</head>
+<body onLoad="init();">
+	<script type="text/javascript"> 
+		options = {
+		"cursorOuter": "circle-basic",
+		"hoverEffect": "circle-move",
+		"hoverItemMove": false,
+		"defaultCursor": false,
+		"outerWidth": 30,
+		"outerHeight": 30
+		};
+		magicMouse(options);
+	</script>
+	<div class="header">
+		<div class="progress-container">
+		  <div class="progress-bar" id="progressBar"></div>
+		</div>
+	  </div>
+    <a href="https://front.codes/" class="logo" target="_blank">
+	</a>
+  	<input class="menu-icon" type="checkbox" id="menu-icon" name="menu-icon"/>
+  	<label for="menu-icon"></label>
+  	<nav class="nav"> 		
+  		<ul class="pt-5">
+  			<li><a class = "line-1" href="#back-7">Обо Мне</a></li>
+  			<li><a class = "line-2" href="#back-8">Портфолио</a></li>
+  			<li><a class = "line-3" href="#back-2">Навыки</a></li>
+  			<li><a class = "line-4" href="#">Написать Мне</a></li>
+            <a class = "bitlo" onclick="document.getElementById('player').play()">ВКЛЮЧИТЬ ЗВУК</a>
+  		</ul>
+  	</nav>
+	<div class = "back">
+		<div class="video-background">
+            <div class="video-foreground">
+              <iframe src="https://www.youtube.com/embed/watch?v=Jox6R5-rIH0&list=PLdGJJ6BBahVodCt3Cet2bDmDSiRVJoE5G&ab_channel=MG1010?controls=0&showinfo=0&rel=0&autoplay=1&mute=1&loop=1&playlist=W0LHTWG-UmQ" frameborder="0" allowfullscreen></iframe>
+            </div>
+        </div>
+        <style>
+.video-background {
+  background: #000;
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: -99;
+}
+.video-foreground,
+.video-background iframe {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+@media (min-aspect-ratio: 16/9) {
+  .video-foreground {
+    height: 300%;
+    top: -100%;
+  }
+}
+@media (max-aspect-ratio: 16/9) {
+  .video-foreground {
+    width: 300%;
+    left: -100%;
+  }
+}
+@media all and (max-width: 600px) {
+  .vid-info {
+    width: 50%;
+    padding: 0.5rem;
+  }
+  .vid-info h1 {
+    margin-bottom: 0.2rem;
+  }
+}
+@media all and (max-width: 500px) {
+  .vid-info .acronym {
+    display: none;
+  }
+}
+
+        </style>
+	<div class = "line">
+        <div class = "music">
+            <audio id="player" src="angels.mp3"></audio>
+            <!---<i class="fa-brands fa-soundcloud" style = "font-size: 20px; color: #fff; margin-right: -10px;"></i>--->
+        </div>
+		<!--<div id = "container"> анимация мыщки
+			<canvas></canvas>
+		</div>->
+	<style>
+	#container {
+	  width: 300vh;
+	  height: 100vh;
+	  display: inline-block;
+	}
+	canvas {
+	  width: 300vh;
+	  height: 100vh;
+	}
+	</style>
+	<script>
+		'use strict';
+	
+	const canvas = document.getElementsByTagName('canvas')[0];
+	canvas.width = canvas.clientWidth;
+	canvas.height = canvas.clientHeight;
+	
+	
+	let config = {
+	 TEXTURE_DOWNSAMPLE: 1,
+		DENSITY_DISSIPATION: 0.89,
+		VELOCITY_DISSIPATION: 0.99,
+		//PRESSURE: 99,
+	  PRESSURE_DISSIPATION: 0,
+		PRESSURE_ITERATIONS: 25,
+		CURL: 2,
+		SPLAT_RADIUS: 0.001,
+		SPLAT_FORCE: 10,
+		SHADING: true,
+		//COLORFUL: true,
+		//COLOR_UPDATE_SPEED: 10,
+		//PAUSED: false,
+		//BACK_COLOR: { r: 0, g: 0, b: 0 },
+		TRANSPARENT: true,
+		BLOOM: true,
+		BLOOM_ITERATIONS: 8,
+		BLOOM_RESOLUTION: 1024,
+		BLOOM_INTENSITY: 0.8,
+		BLOOM_THRESHOLD: 0.6,
+		BLOOM_SOFT_KNEE: 0.7,
+		SUNRAYS: false,
+		SUNRAYS_RESOLUTION: 196,
+		SUNRAYS_WEIGHT: .1,
+	};
+	
+	
+	let pointers = [];
+	let splatStack = [];
+	
+	const { gl, ext } = getWebGLContext(canvas);
+	
+	function getWebGLContext(canvas) {
+	  const params = { alpha: true, depth: false, stencil: false, antialias: true };
+	
+	  let gl = canvas.getContext('webgl2', params);
+	  const isWebGL2 = !!gl;
+	  if (!isWebGL2)
+	  gl = canvas.getContext('webgl', params) || canvas.getContext('experimental-webgl', params);
+	
+	  let halfFloat;
+	  let supportLinearFiltering;
+	  if (isWebGL2) {
+		gl.getExtension('EXT_color_buffer_float');
+		supportLinearFiltering = gl.getExtension('OES_texture_float_linear');
+	  } else {
+		halfFloat = gl.getExtension('OES_texture_half_float');
+		supportLinearFiltering = gl.getExtension('OES_texture_half_float_linear');
+	  }
+	
+	  gl.clearColor(0.0, 0.0, 0.0, 1.0);
+	
+	  const halfFloatTexType = isWebGL2 ? gl.HALF_FLOAT : halfFloat.HALF_FLOAT_OES;
+	  let formatRGBA;
+	  let formatRG;
+	  let formatR;
+	
+	  if (isWebGL2)
+	  {
+		formatRGBA = getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, halfFloatTexType);
+		formatRG = getSupportedFormat(gl, gl.RG16F, gl.RG, halfFloatTexType);
+		formatR = getSupportedFormat(gl, gl.R16F, gl.RED, halfFloatTexType);
+	  } else
+	
+	  {
+		formatRGBA = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+		formatRG = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+		formatR = getSupportedFormat(gl, gl.RGBA, gl.RGBA, halfFloatTexType);
+	  }
+	
+	  return {
+		gl,
+		ext: {
+		  formatRGBA,
+		  formatRG,
+		  formatR,
+		  halfFloatTexType,
+		  supportLinearFiltering } };
+	
+	
+	}
+	
+	function getSupportedFormat(gl, internalFormat, format, type)
+	{
+	  if (!supportRenderTextureFormat(gl, internalFormat, format, type))
+	  {
+		switch (internalFormat) {
+	
+		  case gl.R16F:
+			return getSupportedFormat(gl, gl.RG16F, gl.RG, type);
+		  case gl.RG16F:
+			return getSupportedFormat(gl, gl.RGBA16F, gl.RGBA, type);
+		  default:
+			return null;}
+	
+	  }
+	
+	  return {
+		internalFormat,
+		format };
+	
+	}
+	
+	function supportRenderTextureFormat(gl, internalFormat, format, type) {
+	  let texture = gl.createTexture();
+	  gl.bindTexture(gl.TEXTURE_2D, texture);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, 4, 4, 0, format, type, null);
+	
+	  let fbo = gl.createFramebuffer();
+	  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+	  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+	
+	  const status = gl.checkFramebufferStatus(gl.FRAMEBUFFER);
+	  if (status != gl.FRAMEBUFFER_COMPLETE)
+	  return false;
+	  return true;
+	}
+	
+	function pointerPrototype() {
+	  this.id = -1;
+	  this.x = 0;
+	  this.y = 0;
+	  this.dx = 0;
+	  this.dy = 0;
+	  this.down = false;
+	  this.moved = false;
+	  this.color = [30, 0, 300];
+	}
+	
+	pointers.push(new pointerPrototype());
+	
+	class GLProgram {
+	  constructor(vertexShader, fragmentShader) {
+		this.uniforms = {};
+		this.program = gl.createProgram();
+	
+		gl.attachShader(this.program, vertexShader);
+		gl.attachShader(this.program, fragmentShader);
+		gl.linkProgram(this.program);
+	
+		if (!gl.getProgramParameter(this.program, gl.LINK_STATUS))
+		throw gl.getProgramInfoLog(this.program);
+	
+		const uniformCount = gl.getProgramParameter(this.program, gl.ACTIVE_UNIFORMS);
+		for (let i = 0; i < uniformCount; i++) {
+		  const uniformName = gl.getActiveUniform(this.program, i).name;
+		  this.uniforms[uniformName] = gl.getUniformLocation(this.program, uniformName);
+		}
+	  }
+	
+	  bind() {
+		gl.useProgram(this.program);
+	  }}
+	
+	
+	function compileShader(type, source) {
+	  const shader = gl.createShader(type);
+	  gl.shaderSource(shader, source);
+	  gl.compileShader(shader);
+	
+	  if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS))
+	  throw gl.getShaderInfoLog(shader);
+	
+	  return shader;
+	};
+	
+	const baseVertexShader = compileShader(gl.VERTEX_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		attribute vec2 aPosition;
+		varying vec2 vUv;
+		varying vec2 vL;
+		varying vec2 vR;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform vec2 texelSize;
+	
+		void main () {
+			vUv = aPosition * 0.5 + 0.5;
+			vL = vUv - vec2(texelSize.x, 0.0);
+			vR = vUv + vec2(texelSize.x, 0.0);
+			vT = vUv + vec2(0.0, texelSize.y);
+			vB = vUv - vec2(0.0, texelSize.y);
+			gl_Position = vec4(aPosition, 0.0, 1.0);
+		}
+	`);
+	
+	const clearShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		uniform sampler2D uTexture;
+		uniform float value;
+	
+		void main () {
+			gl_FragColor = value * texture2D(uTexture, vUv);
+		}
+	`);
+	
+	const displayShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		uniform sampler2D uTexture;
+	
+		void main () {
+			gl_FragColor = texture2D(uTexture, vUv);
+		}
+	`);
+	
+	const splatShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		uniform sampler2D uTarget;
+		uniform float aspectRatio;
+		uniform vec3 color;
+		uniform vec2 point;
+		uniform float radius;
+	
+		void main () {
+			vec2 p = vUv - point.xy;
+			p.x *= aspectRatio;
+			vec3 splat = exp(-dot(p, p) / radius) * color;
+			vec3 base = texture2D(uTarget, vUv).xyz;
+			gl_FragColor = vec4(base + splat, 1.0);
+		}
+	`);
+	
+	const advectionManualFilteringShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		uniform sampler2D uVelocity;
+		uniform sampler2D uSource;
+		uniform vec2 texelSize;
+		uniform float dt;
+		uniform float dissipation;
+	
+		vec4 bilerp (in sampler2D sam, in vec2 p) {
+			vec4 st;
+			st.xy = floor(p - 0.5) + 0.5;
+			st.zw = st.xy + 1.0;
+			vec4 uv = st * texelSize.xyxy;
+			vec4 a = texture2D(sam, uv.xy);
+			vec4 b = texture2D(sam, uv.zy);
+			vec4 c = texture2D(sam, uv.xw);
+			vec4 d = texture2D(sam, uv.zw);
+			vec2 f = p - st.xy;
+			return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+		}
+	
+		void main () {
+			vec2 coord = gl_FragCoord.xy - dt * texture2D(uVelocity, vUv).xy;
+			gl_FragColor = dissipation * bilerp(uSource, coord);
+			gl_FragColor.a = 1.0;
+		}
+	`);
+	
+	const advectionShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		uniform sampler2D uVelocity;
+		uniform sampler2D uSource;
+		uniform vec2 texelSize;
+		uniform float dt;
+		uniform float dissipation;
+	
+		void main () {
+			vec2 coord = vUv - dt * texture2D(uVelocity, vUv).xy * texelSize;
+			gl_FragColor = dissipation * texture2D(uSource, coord);
+			gl_FragColor.a = 1.0;
+		}
+	`);
+	
+	const divergenceShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		varying vec2 vL;
+		varying vec2 vR;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform sampler2D uVelocity;
+	
+		vec2 sampleVelocity (in vec2 uv) {
+			vec2 multiplier = vec2(1.0, 1.0);
+			if (uv.x < 0.0) { uv.x = 0.0; multiplier.x = -1.0; }
+			if (uv.x > 1.0) { uv.x = 1.0; multiplier.x = -1.0; }
+			if (uv.y < 0.0) { uv.y = 0.0; multiplier.y = -1.0; }
+			if (uv.y > 1.0) { uv.y = 1.0; multiplier.y = -1.0; }
+			return multiplier * texture2D(uVelocity, uv).xy;
+		}
+	
+		void main () {
+			float L = sampleVelocity(vL).x;
+			float R = sampleVelocity(vR).x;
+			float T = sampleVelocity(vT).y;
+			float B = sampleVelocity(vB).y;
+			float div = 0.5 * (R - L + T - B);
+			gl_FragColor = vec4(div, 0.0, 0.0, 1.0);
+		}
+	`);
+	
+	const curlShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		varying vec2 vL;
+		varying vec2 vR;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform sampler2D uVelocity;
+	
+		void main () {
+			float L = texture2D(uVelocity, vL).y;
+			float R = texture2D(uVelocity, vR).y;
+			float T = texture2D(uVelocity, vT).x;
+			float B = texture2D(uVelocity, vB).x;
+			float vorticity = R - L - T + B;
+			gl_FragColor = vec4(vorticity, 0.0, 0.0, 1.0);
+		}
+	`);
+	
+	const vorticityShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform sampler2D uVelocity;
+		uniform sampler2D uCurl;
+		uniform float curl;
+		uniform float dt;
+	
+		void main () {
+			float T = texture2D(uCurl, vT).x;
+			float B = texture2D(uCurl, vB).x;
+			float C = texture2D(uCurl, vUv).x;
+			vec2 force = vec2(abs(T) - abs(B), 0.0);
+			force *= 1.0 / length(force + 0.00001) * curl * C;
+			vec2 vel = texture2D(uVelocity, vUv).xy;
+			gl_FragColor = vec4(vel + force * dt, 0.0, 1.0);
+		}
+	`);
+	
+	const pressureShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		varying vec2 vL;
+		varying vec2 vR;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform sampler2D uPressure;
+		uniform sampler2D uDivergence;
+	
+		vec2 boundary (in vec2 uv) {
+			uv = min(max(uv, 0.0), 1.0);
+			return uv;
+		}
+	
+		void main () {
+			float L = texture2D(uPressure, boundary(vL)).x;
+			float R = texture2D(uPressure, boundary(vR)).x;
+			float T = texture2D(uPressure, boundary(vT)).x;
+			float B = texture2D(uPressure, boundary(vB)).x;
+			float C = texture2D(uPressure, vUv).x;
+			float divergence = texture2D(uDivergence, vUv).x;
+			float pressure = (L + R + B + T - divergence) * 0.25;
+			gl_FragColor = vec4(pressure, 0.0, 0.0, 1.0);
+		}
+	`);
+	
+	const gradientSubtractShader = compileShader(gl.FRAGMENT_SHADER, `
+		precision highp float;
+		precision mediump sampler2D;
+	
+		varying vec2 vUv;
+		varying vec2 vL;
+		varying vec2 vR;
+		varying vec2 vT;
+		varying vec2 vB;
+		uniform sampler2D uPressure;
+		uniform sampler2D uVelocity;
+	
+		vec2 boundary (in vec2 uv) {
+			uv = min(max(uv, 0.0), 1.0);
+			return uv;
+		}
+	
+		void main () {
+			float L = texture2D(uPressure, boundary(vL)).x;
+			float R = texture2D(uPressure, boundary(vR)).x;
+			float T = texture2D(uPressure, boundary(vT)).x;
+			float B = texture2D(uPressure, boundary(vB)).x;
+			vec2 velocity = texture2D(uVelocity, vUv).xy;
+			velocity.xy -= vec2(R - L, T - B);
+			gl_FragColor = vec4(velocity, 0.0, 1.0);
+		}
+	`);
+	
+	let textureWidth;
+	let textureHeight;
+	let density;
+	let velocity;
+	let divergence;
+	let curl;
+	let pressure;
+	initFramebuffers();
+	
+	const clearProgram = new GLProgram(baseVertexShader, clearShader);
+	const displayProgram = new GLProgram(baseVertexShader, displayShader);
+	const splatProgram = new GLProgram(baseVertexShader, splatShader);
+	const advectionProgram = new GLProgram(baseVertexShader, ext.supportLinearFiltering ? advectionShader : advectionManualFilteringShader);
+	const divergenceProgram = new GLProgram(baseVertexShader, divergenceShader);
+	const curlProgram = new GLProgram(baseVertexShader, curlShader);
+	const vorticityProgram = new GLProgram(baseVertexShader, vorticityShader);
+	const pressureProgram = new GLProgram(baseVertexShader, pressureShader);
+	const gradienSubtractProgram = new GLProgram(baseVertexShader, gradientSubtractShader);
+	
+	function initFramebuffers() {
+	  textureWidth = gl.drawingBufferWidth >> config.TEXTURE_DOWNSAMPLE;
+	  textureHeight = gl.drawingBufferHeight >> config.TEXTURE_DOWNSAMPLE;
+	
+	  const texType = ext.halfFloatTexType;
+	  const rgba = ext.formatRGBA;
+	  const rg = ext.formatRG;
+	  const r = ext.formatR;
+	
+	  density = createDoubleFBO(2, textureWidth, textureHeight, rgba.internalFormat, rgba.format, texType, ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST);
+	  velocity = createDoubleFBO(0, textureWidth, textureHeight, rg.internalFormat, rg.format, texType, ext.supportLinearFiltering ? gl.LINEAR : gl.NEAREST);
+	  divergence = createFBO(4, textureWidth, textureHeight, r.internalFormat, r.format, texType, gl.NEAREST);
+	  curl = createFBO(5, textureWidth, textureHeight, r.internalFormat, r.format, texType, gl.NEAREST);
+	  pressure = createDoubleFBO(6, textureWidth, textureHeight, r.internalFormat, r.format, texType, gl.NEAREST);
+	}
+	
+	function createFBO(texId, w, h, internalFormat, format, type, param) {
+	  gl.activeTexture(gl.TEXTURE0 + texId);
+	  let texture = gl.createTexture();
+	  gl.bindTexture(gl.TEXTURE_2D, texture);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, param);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, param);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+	  gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+	  gl.texImage2D(gl.TEXTURE_2D, 0, internalFormat, w, h, 0, format, type, null);
+	
+	  let fbo = gl.createFramebuffer();
+	  gl.bindFramebuffer(gl.FRAMEBUFFER, fbo);
+	  gl.framebufferTexture2D(gl.FRAMEBUFFER, gl.COLOR_ATTACHMENT0, gl.TEXTURE_2D, texture, 0);
+	  gl.viewport(0, 0, w, h);
+	  gl.clear(gl.COLOR_BUFFER_BIT);
+	
+	  return [texture, fbo, texId];
+	}
+	
+	function createDoubleFBO(texId, w, h, internalFormat, format, type, param) {
+	  let fbo1 = createFBO(texId, w, h, internalFormat, format, type, param);
+	  let fbo2 = createFBO(texId + 1, w, h, internalFormat, format, type, param);
+	
+	  return {
+		get read() {
+		  return fbo1;
+		},
+		get write() {
+		  return fbo2;
+		},
+		swap() {
+		  let temp = fbo1;
+		  fbo1 = fbo2;
+		  fbo2 = temp;
+		} };
+	
+	}
+	
+	const blit = (() => {
+	  gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer());
+	  gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, -1, 1, 1, 1, 1, -1]), gl.STATIC_DRAW);
+	  gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, gl.createBuffer());
+	  gl.bufferData(gl.ELEMENT_ARRAY_BUFFER, new Uint16Array([0, 1, 2, 0, 2, 3]), gl.STATIC_DRAW);
+	  gl.vertexAttribPointer(0, 2, gl.FLOAT, false, 0, 0);
+	  gl.enableVertexAttribArray(0);
+	
+	  return destination => {
+		gl.bindFramebuffer(gl.FRAMEBUFFER, destination);
+		gl.drawElements(gl.TRIANGLES, 6, gl.UNSIGNED_SHORT, 0);
+	  };
+	})();
+	
+	let lastTime = Date.now();
+	multipleSplats(parseInt(Math.random() * 20) + 5);
+	update();
+	
+	function update() {
+	  resizeCanvas();
+	
+	  const dt = Math.min((Date.now() - lastTime) / 1000, 0.016);
+	  lastTime = Date.now();
+	
+	  gl.viewport(0, 0, textureWidth, textureHeight);
+	
+	  if (splatStack.length > 0)
+	  multipleSplats(splatStack.pop());
+	
+	  advectionProgram.bind();
+	  gl.uniform2f(advectionProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read[2]);
+	  gl.uniform1i(advectionProgram.uniforms.uSource, velocity.read[2]);
+	  gl.uniform1f(advectionProgram.uniforms.dt, dt);
+	  gl.uniform1f(advectionProgram.uniforms.dissipation, config.VELOCITY_DISSIPATION);
+	  blit(velocity.write[1]);
+	  velocity.swap();
+	
+	  gl.uniform1i(advectionProgram.uniforms.uVelocity, velocity.read[2]);
+	  gl.uniform1i(advectionProgram.uniforms.uSource, density.read[2]);
+	  gl.uniform1f(advectionProgram.uniforms.dissipation, config.DENSITY_DISSIPATION);
+	  blit(density.write[1]);
+	  density.swap();
+	
+	  for (let i = 0; i < pointers.length; i++) {
+		const pointer = pointers[i];
+		if (pointer.moved) {
+		  splat(pointer.x, pointer.y, pointer.dx, pointer.dy, pointer.color);
+		  pointer.moved = false;
+		}
+	  }
+	
+	  curlProgram.bind();
+	  gl.uniform2f(curlProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(curlProgram.uniforms.uVelocity, velocity.read[2]);
+	  blit(curl[1]);
+	
+	  vorticityProgram.bind();
+	  gl.uniform2f(vorticityProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(vorticityProgram.uniforms.uVelocity, velocity.read[2]);
+	  gl.uniform1i(vorticityProgram.uniforms.uCurl, curl[2]);
+	  gl.uniform1f(vorticityProgram.uniforms.curl, config.CURL);
+	  gl.uniform1f(vorticityProgram.uniforms.dt, dt);
+	  blit(velocity.write[1]);
+	  velocity.swap();
+	
+	  divergenceProgram.bind();
+	  gl.uniform2f(divergenceProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(divergenceProgram.uniforms.uVelocity, velocity.read[2]);
+	  blit(divergence[1]);
+	
+	  clearProgram.bind();
+	  let pressureTexId = pressure.read[2];
+	  gl.activeTexture(gl.TEXTURE0 + pressureTexId);
+	  gl.bindTexture(gl.TEXTURE_2D, pressure.read[0]);
+	  gl.uniform1i(clearProgram.uniforms.uTexture, pressureTexId);
+	  gl.uniform1f(clearProgram.uniforms.value, config.PRESSURE_DISSIPATION);
+	  blit(pressure.write[1]);
+	  pressure.swap();
+	
+	  pressureProgram.bind();
+	  gl.uniform2f(pressureProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(pressureProgram.uniforms.uDivergence, divergence[2]);
+	  pressureTexId = pressure.read[2];
+	  gl.uniform1i(pressureProgram.uniforms.uPressure, pressureTexId);
+	  gl.activeTexture(gl.TEXTURE0 + pressureTexId);
+	  for (let i = 0; i < config.PRESSURE_ITERATIONS; i++) {
+		gl.bindTexture(gl.TEXTURE_2D, pressure.read[0]);
+		blit(pressure.write[1]);
+		pressure.swap();
+	  }
+	
+	  gradienSubtractProgram.bind();
+	  gl.uniform2f(gradienSubtractProgram.uniforms.texelSize, 1.0 / textureWidth, 1.0 / textureHeight);
+	  gl.uniform1i(gradienSubtractProgram.uniforms.uPressure, pressure.read[2]);
+	  gl.uniform1i(gradienSubtractProgram.uniforms.uVelocity, velocity.read[2]);
+	  blit(velocity.write[1]);
+	  velocity.swap();
+	
+	  gl.viewport(0, 0, gl.drawingBufferWidth, gl.drawingBufferHeight);
+	  displayProgram.bind();
+	  gl.uniform1i(displayProgram.uniforms.uTexture, density.read[2]);
+	  blit(null);
+	
+	  requestAnimationFrame(update);
+	}
+	
+	function splat(x, y, dx, dy, color) {
+	  splatProgram.bind();
+	  gl.uniform1i(splatProgram.uniforms.uTarget, velocity.read[2]);
+	  gl.uniform1f(splatProgram.uniforms.aspectRatio, canvas.width / canvas.height);
+	  gl.uniform2f(splatProgram.uniforms.point, x / canvas.width, 1.0 - y / canvas.height);
+	  gl.uniform3f(splatProgram.uniforms.color, dx, -dy, 1.0);
+	  gl.uniform1f(splatProgram.uniforms.radius, config.SPLAT_RADIUS);
+	  blit(velocity.write[1]);
+	  velocity.swap();
+	
+	  gl.uniform1i(splatProgram.uniforms.uTarget, density.read[2]);
+	  gl.uniform3f(splatProgram.uniforms.color, color[0] * 0.3, color[1] * 0.3, color[2] * 0.3);
+	  blit(density.write[1]);
+	  density.swap();
+	}
+	
+	function multipleSplats(amount) {
+	  for (let i = 0; i < amount; i++) {
+		const color = [Math.random() * 10, Math.random() * 10, Math.random() * 10];
+		const x = canvas.width * Math.random();
+		const y = canvas.height * Math.random();
+		const dx = 1000 * (Math.random() - 0.5);
+		const dy = 1000 * (Math.random() - 0.5);
+		splat(x, y, dx, dy, color);
+	  }
+	}
+	
+	function resizeCanvas() {
+	  if (canvas.width != canvas.clientWidth || canvas.height != canvas.clientHeight) {
+		canvas.width = canvas.clientWidth;
+		canvas.height = canvas.clientHeight;
+		initFramebuffers();
+	  }
+	}
+	
+	canvas.addEventListener('mousemove', e => {
+	  pointers[0].moved = pointers[0].down;
+	  pointers[0].dx = (e.offsetX - pointers[0].x) * 10.0;
+	  pointers[0].dy = (e.offsetY - pointers[0].y) * 10.0;
+	  pointers[0].x = e.offsetX;
+	  pointers[0].y = e.offsetY;
+	});
+	
+	canvas.addEventListener('touchmove', e => {
+	  e.preventDefault();
+	  const touches = e.targetTouches;
+	  for (let i = 0; i < touches.length; i++) {
+		let pointer = pointers[i];
+		pointer.moved = pointer.down;
+		pointer.dx = (touches[i].pageX - pointer.x) * 10.0;
+		pointer.dy = (touches[i].pageY - pointer.y) * 10.0;
+		pointer.x = touches[i].pageX;
+		pointer.y = touches[i].pageY;
+	  }
+	}, false);
+	
+	canvas.addEventListener('mousemove', () => {
+	  pointers[0].down = true;
+	  pointers[0].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
+	});
+	
+	canvas.addEventListener('touchstart', e => {
+	  e.preventDefault();
+	  const touches = e.targetTouches;
+	  for (let i = 0; i < touches.length; i++) {
+		if (i >= pointers.length)
+		pointers.push(new pointerPrototype());
+	
+		pointers[i].id = touches[i].identifier;
+		pointers[i].down = true;
+		pointers[i].x = touches[i].pageX;
+		pointers[i].y = touches[i].pageY;
+		pointers[i].color = [Math.random() + 0.2, Math.random() + 0.2, Math.random() + 0.2];
+	  }
+	});
+	
+	window.addEventListener('mouseleave', () => {
+	  pointers[0].down = false;
+	});
+	
+	window.addEventListener('touchend', e => {
+	  const touches = e.changedTouches;
+	  for (let i = 0; i < touches.length; i++)
+	  for (let j = 0; j < pointers.length; j++)
+	  if (touches[i].identifier == pointers[j].id)
+	  pointers[j].down = false;
+	});
+	</script>
+		<!---<a href = "#" class = "main-menu-button"><i class="fa-solid fa-bars"></i></a>--->
+		
+        <!---<nav>
+			<ul>
+				<li>
+					<a href = "#" class = "menu-button"><i class="fa-brands fa-telegram" style = "font-size: 50px; "></i></a>
+					<a href = "#" class = "menu-button"><i class="fa-brands fa-facebook" style = "font-size: 50px; "></i></a>
+					<a href = "#" class = "menu-button"><i class="fa-brands fa-github"   style = "font-size: 50px; "></i></a>
+				</li>
+			</ul>
+		</nav>--->
+	</div>
+	<div class = "text">
+		<div class = "menu">
+			<div class = "menu-logo"></div> 
+			<a href = "#back-7" class = "first-menu-button">ОБО МНЕ</a>
+			<a href = "#back-8" class = "first-menu-button">ПОРТФОЛИО</a>
+			<a href = "#back-2" class = "first-menu-button">НАВЫКИ</a>
+			<a class = "second-menu-button" href = "#">НАПИСАТЬ МНЕ</a>
+		</div>
+	    <h1 class = "name-text">СЕРГЕЙ ХУДЯКОВ</h1>
+		<div class = "main-text">Привет. Я привет, я привет, я привет, я привет.<br> Я привет, я привет, я привет, я привет.<br>  Я привет, я привет, я привет, я привет.</div>
+		<a href = "#" class = "main-button">Резюме-CV</a>
+	</div>
+	<div class = "menu-skills">
+		<a class = "skill-button"><i class="fa-brands fa-vk"></i></a>
+		<a class = "skill-button"><i class="fa-brands fa-instagram"></i></a>
+		<a class = "skill-btn">СОЦСЕТИ</a>
+		<a class = "skill-button"><i class="fa-brands fa-square-twitter"></i></a>
+	</div>
+    </div>
+<div class = "background-back-7">
+	<div id = "back-7">
+		
+		<!---<div id = "skill" class = "skills">Что Я Умею?</div>--->
+
+			<!---<div class = "portfolio-block">
+				<div class = "web-block">
+					<div class="flip-card">
+						<div class="flip-card-inner">
+						  <div class="flip-card-front">
+							<div class = "image-block-2"></div>
+					<div class = "portfolio-text">Вёрстка сайтов<br> по макету</div>
+					<div class = 'portfolio-main'>Вы набиты спесью а я теперь мистер стелс, я не числюсь ни в одном из царств</div>
+					<a href = "#" class = "portfolio-button">Больше</a>
+						  </div>
+						  <div class="flip-card-back">
+					<div class = "portfolio-text-back">Пример #1</div>
+					<div class = 'portfolio-main-back'></div>
+					<a href = "#" class = "portfolio-button-back">Больше</a>
+						  </div>
+						</div>
+					</div>
+				</div>
+				<div class = "design-block">
+					<div class="flip-card">
+						<div class="flip-card-inner">
+						  <div class="flip-card-front">
+							<div class = "image-block-1"></div>
+					<div class = "portfolio-text">Веб<br>дизайн</div>
+					<div class = 'portfolio-main'>Вы набиты спесью а я теперь мистер стелс, я не числюсь ни в одном из царств</div>
+					<a href = "#" class = "portfolio-button">Больше</a>
+						  </div>
+						  <div class="flip-card-back">
+					<div class = "portfolio-text-back-2">Пример #2</div>
+					<div class = 'portfolio-main-back-2'></div>
+					<a href = "#" class = "portfolio-button-back">Больше</a>
+						  </div>
+						</div>
+					  </div>
+				</div>
+				<div class = "app-block">
+					<div class="flip-card">
+						<div class="flip-card-inner">
+						  <div class="flip-card-front">
+							<div class = "image-block-3"></div>
+					<div class = "portfolio-text">Мобильные приложения</div>
+					<div class = 'portfolio-main'>Вы набиты спесью а я теперь мистер стелс, я не числюсь ни в одном из царств</div>
+					<a href = "#" class = "portfolio-button">Больше</a>
+						  </div>
+						  <div class="flip-card-back">
+					<div class = "portfolio-text-back-3">Пример #3</div>
+					<div class = 'portfolio-main-back-3'></div>
+					<a href = "#" class = "portfolio-button-back">Больше</a>
+						  </div>
+						</div>
+					  </div>
+				</div>
+			</div>--->
+
+
+
+
+			<!---<div class = "box">
+				<div class = "image">
+					<img src = "image/port1.jpg">
+				</div>
+				<div class = "content">
+					<h2>John<br><span>designer</span></h2>
+				</div>
+			</div>
+			<div class = "box">
+				<div class = "image">
+					<img src = "image/port2.png">
+				</div>
+				<div class = "content">
+					<h2>John<br><span>designer</span></h2>
+				</div>
+			</div>
+			<div class = "box">
+				<div class = "image">
+					<img src = "image/port5.jpg">
+				</div>
+				<div class = "content">
+					<h2>John<br><span>designer</span></h2>
+				</div>
+			</div>--->
+			<div class = "text-box">
+				Более двух лет у меня было много возможностей работать в широком спектре веб
+                -технологий, что позволило мне накопить значительный объем разнообразного опыта. Работая на частных лиц по 
+			    всему миру я учился у удивительных и амбициозных людей.
+                В настоящее время я работаю удаленно с выбранной клиентской базой фрилансеров, будучи открытым для новых возможностей.
+			</div>
+		<script>
+			function onEntry(entry) {
+  entry.forEach(change => {
+    if (change.isIntersecting) {
+     change.target.classList.add('element-show');
+    }
+  });
+}
+
+let options = {
+  threshold: [0.5] };
+let observer = new IntersectionObserver(onEntry, options);
+let elements = document.querySelectorAll('.text-box');
+
+for (let elm of elements) {
+  observer.observe(elm);
+}
+		</script>
+			
+	</div>
+</div>
+	<div id = "back-8">
+		<div id="mydivon" style="display:block">
+			<div class = "block-block">
+				<div class = "block">
+					<h1 class = "block-h1">НОВЫЙ ПРОЕКТ</h1>
+					<h2 class = "block-h2">Агенство</h2>
+					<div class = "text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione fugiat nostrum quis magni, vero eveniet eos! Cumque mollitia, eligendi eaque adipisci sapiente incidunt voluptates esse similique consectetur praesentium ad dolorum.</div>
+					<a href = "#" class = "read-button">read more</a>
+				</div>
+				<a class = "point" href="javascript:;" onmousedown="toggleDiv('mydiv');"><i class="fa-solid fa-arrow-right" style = "color: #000; font-size: 20px;"></i></a>
+				<div class = "news image1"></div>
+				<div class = "news image2"></div>
+				<div class = "news image3"></div>
+				<div class = "news image4"></div>
+				<div class = "news image5"></div>
+			</div>
+		</div>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+		<script>
+			var newsIndex = 1;
+function NewsRotator() {
+  $(".news").hide();
+  $(".news" + newsIndex).show();
+  
+  var newsCount = 5;
+  newsIndex++;
+  if(newsIndex > newsCount) {
+    newsIndex = 1;
+  }
+}
+
+$(document).ready(function() {
+  NewsRotator();
+  setInterval(NewsRotator, 3000);
+});
+		</script>
+<div id="mydivoff" style="display:none">
+  <div class = "block">
+        <h1>papgency</h1>
+        <div class = "text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Ratione fugiat nostrum quis magni, vero eveniet eos! Cumque mollitia, eligendi eaque adipisci sapiente incidunt voluptates esse similique consectetur praesentium ad dolorum.</div>
+        <a href = "#" class = "read-button">read more</a>
+  </div>
+<a class = "point" href="javascript:;" onmousedown="toggleDiv('mydiv');"><i class="fa-solid fa-arrow-left" style = "color: #000; font-size: 20px;"></i></a>
+</div>
+<!---<div class = "square">                  <---- 3 АНИМИРОВАННЫХ КВАДРАТА CSS
+	<span class = "square-span"></span>
+	<span class = "square-span"></span>
+	<span class = "square-span"></span>
+</div>--->
+		<!---<div class = "blog-grow-1"> РАБОЧИЕ 9 ФОТО
+			<div class = "blog1">
+				<div class = "blog1-main-text">
+					<h1 class = "h1-blog"></h1>
+				</div>
+			</div>
+			</div>
+			<div class = "blog1">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog"></h1>
+					</div>
+			</div>
+			<div class = "blog1">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog"></h1>
+					</div>
+			</div>
+		</div>
+		<div class = "blog-grow-2">
+			<div class = "blog2">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+
+			</div>
+			<div class = "blog2">
+				<div class = "blog1-psevdo">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+				   </div>
+			</div>
+			<div class = "blog2">
+				<div class = "blog1-psevdo">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+				   </div>
+			</div>
+		</div>
+		<div class = "blog-grow-3">
+			<div class = "blog3">
+				<div class = "blog1-psevdo">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+				   </div>
+			</div>
+			<div class = "blog3">
+				<div class = "blog1-psevdo">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+				   </div>
+			</div>
+			<div class = "blog3">
+				<div class = "blog1-psevdo">
+					<div class = "blog1-main-text">
+						<h1 class = "h1-blog">+</h1>
+					</div>
+				   </div>
+			</div>
+		</div>--->
+	</div>
+<div class = "back-2-background">
+	<div id = "back-2">
+		<!---<div class = "who-am-text">
+			Hello, I`m
+		</div>
+		<div class = "who-am-text-2">
+			Lorem ipsum dolor sit amet consectetur, adipisicing elit. Praesentium distinctio doloribus quam? Ut, laudantium a dolore, minima repudiandae iure iste molestiae exercitationem earum neque tempora?
+		</div>
+		<p>HTML</p>
+		<div class = "container-skills">
+			<div class = "html-line"></div>
+		</div>
+		<p>CSS</p>
+		<div class = "container-skills">
+			<div class = "css-line"></div>
+		</div>
+		<p>JavaScript</p>
+		<div class = "container-skills">
+			<div class = "js-line"></div>
+		</div>
+		<p>Photoshop</p>
+		<div class = "container-skills">
+			<div class = "photoshop-line"></div>
+		</div>--->
+
+            <!---<span class = "skewed"></span>
+		<script type = "text/javascript">
+            var skewed = document.querySelector('.skewed');
+            window.addEventListener('scroll', function() {
+                var value = -10 + window.scrollY/60;
+                skewed.style.transform = "skewY(" + value + "deg)"
+            })
+        </script>
+        <style>
+            #back-2 .skewed {
+                width: 100%;
+                height: 100%;
+                background: #fff;
+                transform: skewY(-10deg);
+                transform-origin: top left;
+				display: inline-block;
+            }
+        </style>--->
+		<div class = "block-skills">
+            <h1 class = "skill-h">МОИ НАВЫКИ</h1>
+            <div class = "block-text-skills">
+                <p class = "skill-p">HTML</p>
+                <div class = "pseudo-line"><div class = "line1"></div></div>
+            </div>
+            <div class = "block-text-skills">
+                <p class = "skill-p">CSS</p>
+                <div class = "pseudo-line"><div class = "line2"></div></div>
+            </div>
+            <div class = "block-text-skills">
+                <p class = "skill-p">JAVASCRIPT</p>
+                <div class = "pseudo-line"><div class = "line3"></div></div>
+            </div>
+            <div class = "block-text-skills">
+                <p class = "skill-p">PHOTOSHOP</p>
+                <div class = "pseudo-line"><div class = "line4"></div></div>
+            </div>
+        </div>
+		<span class="Sphere"></span>
+		<script src="https://cdn.jsdelivr.net/npm/TagCloud@2.2.0/dist/TagCloud.min.js"> </script>
+			<script>
+				const Texts = [
+					'HTML', 'CSS', 'JAVASCRIPT',
+					'SWIFT', 'MONGOOSE', 'REACT',
+					'PYTHON', 'SASS',
+					'DJANGO', 'NODEJS', 'MONGODB',
+					'EXPRESS', 'MYSQL', 'JQUERY', 'JAVA'
+				];
+		
+				var tagCloud = TagCloud('.Sphere', Texts, {
+		
+					// Sphere radius in px
+					radius: 400,
+		
+					// animation speed
+					// slow, normal, fast
+					maxSpeed: 'fast',
+					initSpeed: 'slow',
+		
+					// Rolling direction [0 (top) , 90 (left),  (right-bottom)] 
+					direction: 135,
+		
+					// interaction with mouse or not [Default true (decelerate to rolling init speed, and keep rolling with mouse).]
+					keep: true
+	
+				});
+		
+				// Giving color to each text in sphere
+				var color = '#fff';
+				document.querySelector('.Sphere').style.color = color;
+			</script>
+		 <!---<div class="row">
+			<div class = "img-portfolio-1" style = "border-radius: 10px 0 0 0;" alt="" tabindex="0">
+			</div>
+		    <div class = "img-portfolio-2" alt="" tabindex="0">
+			</div>
+		    <div class = "img-portfolio-3" alt="" tabindex="0">
+			</div>
+		    <div class = "img-portfolio-4" alt="" tabindex="0">
+			</div>
+		    <div class = "img-portfolio-5" alt="" tabindex="0">
+			</div>
+		  </div>
+		  <div class="row1">
+			<div class = "img-portfolio-6" style = "border-radius: 0 0 0 15px;" alt="" tabindex="0">
+			</div>
+			<div class = "img-portfolio-7" alt="" tabindex="0">
+			</div>
+			<div class = "img-portfolio-8" alt="" tabindex="0">
+			</div>
+			<div class = "img-portfolio-9" alt="" tabindex="0">
+			</div>
+			<div class = "img-portfolio-10" alt="" tabindex="0">
+			</div>
+		  </div>--->
+<div>
+	<!---<button onclick="document.getElementById('player').pause()">Пауза</button>я
+	<button onclick="document.getElementById('player').volume+=0.1">Громкость +</button>
+	<button onclick="document.getElementById('player').volume-=0.1">Громкость -</button>--->
+</div> 
+
+	</div>
+</div>
+
+	<div class = "back-9">
+		<div class = "circle">
+			<div class = "data-circle-1">
+				<h1 class = "counter" data-speed="1000">59</h1><h2>ПРОЕКТОВ</h2>
+				<span></span>
+				<span></span>
+				<span></span>
+				<span></span>
+			</div>
+			<div class = "data-circle-2">
+				<h1 class = "counter" data-speed="1000">27</h1><h2>КЛИЕНТОВ</h2>
+			</div>
+			<div class = "data-circle-3">
+				<h1 class = "counter" data-speed="1000">1000</h1><h2>ЧАСОВ РАБОТЫ</h2>
+			</div>
+		</div>
+		<script>
+			let counter = document.querySelectorAll(".counter");
+let a = Array.from(counter);
+a.map((item)=>{
+    let count = item.innerHTML;
+    item.innerHTML = "";
+    let countNumber = 0;
+
+    function counterUP(){
+        item.innerHTML = countNumber++;
+        if(countNumber > count){
+            clearInterval(stop);
+    }
+}
+    let stop = setInterval(()=>{
+        counterUP();
+    }, item.dataset.speed/count);
+});
+		</script>
+	</div>
+	
+
+	<div class  = "back-10">
+		<div class = "back-10-text">
+			<h1 class = "back-10-h1">Блог</h1>
+			<h2 class = "back-10-h2">Последние новости</h2>
+		</div>
+		<div class = "blog-block">
+			<div class = "first-card">
+				<div class = "first-card-image"></div>
+				<div class = "first-card-date">17 МАРТА</div>
+				<div class = "first-card-name">КАК СДЕЛАТЬ МЕНЮ</div>
+				<div class = "first-card-block">
+					<div class = "first-card-text">Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню.</div>
+				</div>
+				<a href = "#" class = "first-card-button">Читать</a>
+			</div>
+			<div class = "second-card">
+				<div class = "second-card-image"></div>
+				<div class = "first-card-date">17 МАРТА</div>
+				<div class = "first-card-name">КАК СДЕЛАТЬ МЕНЮ</div>
+				<div class = "first-card-block">
+					<div class = "first-card-text">Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню.</div>
+				</div>
+				<a href = "#" class = "first-card-button">Читать</a>
+			</div>
+			<div class = "third-card">
+				<div class = "third-card-image"></div>
+				<div class = "first-card-date">17 МАРТА</div>
+				<div class = "first-card-name">КАК СДЕЛАТЬ МЕНЮ</div>
+				<div class = "first-card-block">
+					<div class = "first-card-text">Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню. Как сделать меню.</div>
+				</div>
+				<a href = "#" class = "first-card-button">Читать</a>
+			</div>
+		</div>
+		
+	<!---<div class = "back-4">
+			<div class = "me">
+				Me, Myself and I
+			</div>
+			<div class = "me-paragraph">
+				Since Adobe Flash was a complete innovation, alongside with CSS 1.0 and HTML 4.01<br>
+				as standards of the current web I've been passionate about web.
+		
+				For over a decade | had many opportunities to work in a vast spectrum of web<br>
+				technologies what let me gather a significant amount of various experience. Working for
+				companies and individuals around the globe | met and leamt from amazing and ambitious<br>
+				people.
+		
+				I currently work remotely with a selected freelance client base being open for new
+				opportunities <a class = "see-more">See more</a><br>
+			</div>
+				<span class="Sphere"></span>
+		
+			<script src="https://cdn.jsdelivr.net/npm/TagCloud@2.2.0/dist/TagCloud.min.js"> </script>
+			<script>
+				const Texts = [
+					'HTML', 'CSS', 'JAVASCRIPT',
+					'SWIFT', 'MONGOOSE', 'REACT',
+					'PYTHON', 'SASS',
+					'DJANGO', 'NODEJS', 'MONGODB',
+					'EXPRESS', 'MYSQL', 'JQUERY', 'JAVA'
+				];
+		
+				var tagCloud = TagCloud('.Sphere', Texts, {
+		
+					// Sphere radius in px
+					radius: 200,
+		
+					// animation speed
+					// slow, normal, fast
+					maxSpeed: 'normal',
+					initSpeed: 'slow',
+		
+					// Rolling direction [0 (top) , 90 (left),  (right-bottom)] 
+					direction: 135,
+		
+					// interaction with mouse or not [Default true (decelerate to rolling init speed, and keep rolling with mouse).]
+					keep: true
+	
+				});
+		
+				// Giving color to each text in sphere
+				var color = '#fff';
+				document.querySelector('.Sphere').style.color = color;
+			</script>
+
+
+<span class="Sphere1"></span>
+		
+<script src="https://cdn.jsdelivr.net/npm/TagCloud@2.2.0/dist/TagCloud.min.js"> </script>
+<script>
+	const Texts = [
+		'HTML', 'CSS', 'JAVASCRIPT',
+		'SWIFT', 'MONGOOSE', 'REACT',
+		'PYTHON', 'SASS',
+		'DJANGO', 'NODEJS', 'MONGODB',
+		'EXPRESS', 'MYSQL', 'JQUERY', 'JAVA'
+	];
+
+	var tagCloud = TagCloud('.Sphere1', Texts, {
+
+		// Sphere radius in px
+		radius: 400,
+
+		// animation speed
+		// slow, normal, fast
+		maxSpeed: 'normal',
+		initSpeed: 'slow',
+
+		// Rolling direction [0 (top) , 90 (left),  (right-bottom)] 
+		direction: 135,
+
+		// interaction with mouse or not [Default true (decelerate to rolling init speed, and keep rolling with mouse).]
+		keep: true
+
+	});
+
+	// Giving color to each text in sphere
+	var color = '#000';
+	document.querySelector('.Sphere1').style.color = color;
+</script>
+	</div>--->
+
+
+	<!---<div class = "back-5">
+		<div class = "blog-grow-1">
+			<div class = "blog1" style = "border-top: 3px solid #cfd87d;">
+				<div class = "blog1-text-1" style = "color: #cfd87d;">SQL & DATABASES</div>
+				<div class = "blog1-text-2">Database Queries to One Table</div>
+			</div>
+			<div class = "blog1" style = "border-top: 3px solid #81d8f7;">
+				<div class = "blog1-text-1" style = "color: #81d8f7">COMPUTER SCIENCE</div>
+				<div class = "blog1-text-2">Algorithm and Data Structures </div>
+			</div>
+			<div class = "blog1" style = "border-top: 3px solid #fd2155;">
+				<div class = "blog1-text-1" style = "color: #fd2155">WEB DEVELOPMENT</div>
+				<div class = "blog1-text-2">Fundamentals of HTML5</div>
+			</div>
+		</div>
+		<div class = "blog-grow-2">
+			<div class = "blog2" style = "border-top: 3px solid #ffa500;">
+				<div class = "blog1-text-1" style = "color: #ffa500">JAVA SCRIPT</div>
+				<div class = "blog1-text-2">How to Do Learn JS Massive</div>
+			</div>
+			<div class = "blog2" style = "border-top: 3px solid #fd2155;">
+				<div class = "blog1-text-1" style = "color: #fd2155">WEB DEVELOPMENT</div>
+				<div class = "blog1-text-2">Guide How to Use Flexbox</div>
+			</div>
+			<div class = "blog2" style = "border-top: 3px solid #cfd87d;">
+				<div class = "blog1-text-1" style = "color: #cfd87d">SQL & DATABASES</div>
+				<div class = "blog1-text-2">Database Deep Search</div>
+			</div>
+		</div>
+		<div class = "blog-grow-3">
+			<div class = "blog3" style = "border-top: 3px solid #08fdd8;">
+				<div class = "blog1-text-1" style = "color: #08fdd8">WEB DEVELOPMENT</div>
+				<div class = "blog1-text-2">How to Create Menu-Burger<br> Using CSS3 and HTML5</div>
+			</div>
+			<div class = "blog3" style = "border-top: 3px solid #08fdd8;">
+				<div class = "blog1-text-1" style = "color: #08fdd8">WEB DEVELOPMENT</div>
+				<div class = "blog1-text-2">Basic Knowledges About<br> Adaptive Layout</div>
+			</div>
+			<div class = "blog3" style = "border-top: 3px solid #08fdd8;">
+				<div class = "blog1-text-1" style = "color: #08fdd8">WEB DEVELOPMENT</div>
+				<div class = "blog1-text-2">How to Import a Font From<br> the Web to Your Site</div>
+			</div>
+		</div>
+	</div>--->
+
+	<div class = "back-6">
+		<div class = "contact-me-1">Contact Me</div>
+		<div class = "contact-me-2">I'm interested in freelance opportunities - especially ambitious or large projects.<br> However, if you have other request or question, don't hesitate to use the form.</div>
+		<div class = "contact-me-input">
+			<input name="name"    placeholder="Name"    class="name"    required />
+		    <input name="surname" placeholder="Surname" class="surname" required />
+		    <input name="subject" placeholder="Subject" class="subject" required />
+		    <input name="message" placeholder="Message" class="message" required />
+		</div>
+		<div class = "map">
+			<div class = "map-content">
+				<div class = "map-margin-1">
+					Sergey Hudyakow<br>
+				    <div class = "map-margin-2">
+						<div class = "mail">@:</div>sergey-hudyakow@mail.ru<br>
+				        +7-980-528-14-55
+					</div>
+				</div>
+			</div>
+		</div>
+		<a type = "submit" href = "#" class = "contact-me-button">
+			<span>Send Message!</span>
+		</a>
+	</div>
+	<script type="text/javascript" src="http://code.jquery.com/jquery-1.4.4.min.js"></script>
+
+	<!---<script type="text/javascript">
+	$(document).ready(function() {
+	$("body").css("display", "none"); /** body (здесь и далее) означает, что эффект применяется ко всей странице. Можно изменить на идентификаторы любых элементов (#content, .comments и т.д.) */
+  
+	$("body").fadeIn(1500); /** время появления в миллисекундах */
+	 
+	$("a.fade").click(function(event){ /** a.fade означает, что данное решение будет работать только при нажатии на ссылки с классом (class) "fade" (можно изменить на свой) */
+	event.preventDefault();
+	linkLocation = this.href;
+	$("body").fadeOut(500, redirectPage); /** время изчезания в миллисекундах */
+	});
+  
+	function redirectPage() {
+	window.location = linkLocation;
+	}
+	});
+	</script>--->
+	<script>
+	function progressBarScroll() {
+  let winScroll = document.body.scrollTop || document.documentElement.scrollTop,
+      height = document.documentElement.scrollHeight - document.documentElement.clientHeight,
+      scrolled = (winScroll / height) * 100;
+  document.getElementById("progressBar").style.width = scrolled + "%";
+}
+
+window.onscroll = function () {
+  progressBarScroll();
+};
+	</script>
+</body>
+</html>

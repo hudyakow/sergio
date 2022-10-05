@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <script type="text/javascript">
+            setTimeout('window.location="index.html"',4500);
+        </script>
+        <style>
+            @import url('https://fonts.googleapis.com/css2?family=Raleway&display=swap');
+
+:root {
+  --background: #121212;
+  --primary:#fd2155;
+}
+body{
+  background:var(--background);
+  font-family: 'Raleway', sans-serif;
+  display:flex;
+  width:100%;
+  height:100vh;
+  align-items:center;
+  justify-content:center;
+  overflow: hidden;
+}
+.container{
+  display:flex;
+  align-items:center;
+  margin-top: -10%;
+}
+.container > .static-txt {
+  color: #fff;
+  font-size: 60px;
+}
+
+.container > .dynamic-txt {
+  color: var(--primary);
+  font-size:60px;
+  height: 70px;
+  line-height:70px;
+  overflow:hidden;
+  margin-left:0 0 0 15px;
+  padding-left: 15px;
+}
+.dynamic-txt > li {
+  list-style:none;
+  font-weight:500;
+  position: relative;
+  animation: slide 6s steps(2) infinite;
+}
+@keyframes slide{
+  100% {
+    top: -70px;
+  }
+}
+.dynamic-txt li span {
+  margin:5px 0;
+  line-height:70px;
+}
+
+.dynamic-txt li span::after {
+  position:absolute;
+  content:'';
+  left:0;
+  height:100%;
+  width:100%;
+  line-height:70px;
+  background:var(--background);
+  border-left: 2px solid var(--primary);
+  animation: typing 3s steps(10) infinite;
+}
+
+@keyframes typing {
+  40%,60% {left: calc(100% + 30px);}
+  100% {left:0;}
+}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="static-txt">Я</div>
+            <ul class="dynamic-txt">
+              <li><span>Сергей Худяков</span></li>
+              <li><span>Веб-дизайнер</span></li>
+            </ul>
+          </div>
+    </body>
+</html>
